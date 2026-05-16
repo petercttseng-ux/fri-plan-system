@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>水試所科技計畫資訊系統</title>
+  <meta name="description" content="農業部水產試驗所科技計畫資訊系統，提供114年及115年度科技計畫查詢、瀏覽及PDF下載服務。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== HERO HEADER ===== -->
+<header class="site-header" id="top">
+  <div class="header-bg-waves"></div>
+  <div class="header-content">
+    <div class="logo-area">
+      <img src="assets/fri_logo.jpg" alt="水產試驗所Logo" class="fri-logo" id="fri-logo-img">
+      <div class="header-titles">
+        <div class="org-name">農業部水產試驗所</div>
+        <div class="sys-name">科技計畫資訊系統</div>
+        <div class="sys-en">Fisheries Research Institute — Technology Plan Information System</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-badge" id="current-date"></div>
+      <div class="meta-badge">系統版本 v2.0</div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="main-container">
+
+  <!-- Query Panel -->
+  <section class="query-panel" id="query-panel">
+    <div class="query-title">
+      <span class="q-icon">🔍</span>
+      <span>選擇查詢年度與計畫</span>
+    </div>
+    <div class="query-controls">
+      <div class="control-group">
+        <label class="control-label" for="year-select">查詢年度</label>
+        <div class="year-tabs">
+          <button class="year-tab active" id="tab-114" onclick="switchYear('114')">
+            <span class="tab-year">114年</span>
+            <span class="tab-sub">2025年度</span>
+          </button>
+          <button class="year-tab" id="tab-115" onclick="switchYear('115')">
+            <span class="tab-year">115年</span>
+            <span class="tab-sub">2026年度</span>
+          </button>
+        </div>
+      </div>
+      <div class="control-group" id="plan-select-group">
+        <label class="control-label">選擇計畫</label>
+        <div class="plan-select-grid" id="plan-select-grid">
+          <!-- Dynamically generated -->
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="selectAllPlans()" id="btn-all">
+          <span>📋</span> 顯示全部計畫
+        </button>
+        <button class="btn btn-secondary" onclick="clearSelection()">
+          <span>✕</span> 清除選取
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" id="stats-bar" style="display:none;">
+    <div class="stat-item">
+      <div class="stat-num" id="stat-count">0</div>
+      <div class="stat-label">查詢計畫數</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-budget">0</div>
+      <div class="stat-label">計畫總經費（千元）</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-year">114年</div>
+      <div class="stat-label">查詢年度</div>
+    </div>
+    <div class="stat-item print-hide">
+      <button class="btn btn-print" onclick="printReport()">🖨️ 列印報告</button>
+      <button class="btn btn-pdf" onclick="savePDF()">📥 儲存PDF</button>
+    </div>
+  </div>
+
+  <!-- Results Area -->
+  <section id="results-area" class="results-area"></section>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="empty-state">
+    <div class="empty-icon">🐟</div>
+    <div class="empty-title">請選擇欲查詢的科技計畫</div>
+    <div class="empty-sub">從上方選擇年度及計畫，即可顯示詳細計畫資訊</div>
+  </div>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo-row">
+      <img src="assets/fri_logo.jpg" alt="FRI" class="footer-logo">
+      <div>
+        <div class="footer-org">農業部水產試驗所</div>
+        <div class="footer-org-en">Taiwan Fisheries Research Institute, MOAS</div>
+      </div>
+    </div>
+    <div class="footer-info">
+      地址：202基隆市中正區中正路199號 ｜ 電話：(02)2462-2101<br>
+      本系統資料來源為各年度科技計畫書及研究報告，僅供參考使用
+    </div>
+    <div class="footer-copy">© 2025 農業部水產試驗所 版權所有</div>
+  </div>
+</footer>
+
+<!-- PDF Overlay -->
+<div class="pdf-overlay" id="pdf-overlay">
+  <div class="pdf-spinner"></div>
+  <div class="pdf-msg">正在產生PDF，請稍候...</div>
+</div>
+
+<script src="data/plans.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
