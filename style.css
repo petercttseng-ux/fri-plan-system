@@ -244,10 +244,23 @@ body {
   color: var(--text-dark);
   line-height: 1.4;
 }
-.plan-label-unit {
-  font-size: 11px;
-  color: var(--text-light);
-  margin-top: 2px;
+/* Form Inputs */
+.form-input {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 15px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+  color: var(--text-dark);
+  transition: all 0.2s ease;
+  font-family: inherit;
+  outline: none;
+}
+.form-input:focus {
+  border-color: var(--ocean-light);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(26,126,196,0.15);
 }
 
 /* Action Buttons */

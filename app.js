@@ -6,10 +6,12 @@ let currentYear = '114';
 let selectedPlanIds = new Set();
 let chartInstances = {};
 
+let currentKeyword = '';
+
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
   setCurrentDate();
-  renderPlanSelector('114');
+  updateDropdownAndResults();
 });
 
 function setCurrentDate() {
@@ -29,59 +31,66 @@ function switchYear(year) {
   document.getElementById('tab-114').classList.toggle('active', year === '114');
   document.getElementById('tab-115').classList.toggle('active', year === '115');
 
-  renderPlanSelector(year);
+  // Reset search when switching year
+  document.getElementById('search-input').value = '';
+  currentKeyword = '';
+  
+  updateDropdownAndResults();
   clearResults();
 }
 
-// ---- Plan Selector ----
-function renderPlanSelector(year) {
-  const plans = PLANS_DATA[year] || [];
-  const grid = document.getElementById('plan-select-grid');
-  grid.innerHTML = '';
-  plans.forEach(p => {
-    const item = document.createElement('label');
-    item.className = 'plan-checkbox-item';
-    item.dataset.id = p.id;
-    item.innerHTML = `
-      <input type="checkbox" value="${p.id}" onchange="togglePlan('${p.id}', this.checked)">
-      <div>
-        <div class="plan-label-text">${p.name}</div>
-        <div class="plan-label-unit">📍 ${p.unit} ｜ 👤 ${p.pi}</div>
-      </div>`;
-    grid.appendChild(item);
+// ---- Search & Dropdown ----
+function handleSearch() {
+  currentKeyword = document.getElementById('search-input').value.trim().toLowerCase();
+  updateDropdownAndResults();
+}
+
+function getFilteredPlans() {
+  const plans = PLANS_DATA[currentYear] || [];
+  if (!currentKeyword) return plans;
+  
+  return plans.filter(p => {
+    const textToSearch = [
+      p.name, p.pi, p.unit, p.goal, p.results,
+      ...(p.workItems || [])
+    ].join(' ').toLowerCase();
+    return textToSearch.includes(currentKeyword);
   });
 }
 
-function togglePlan(id, checked) {
-  if (checked) selectedPlanIds.add(id);
-  else selectedPlanIds.delete(id);
-
-  // Update visual state
-  document.querySelectorAll('.plan-checkbox-item').forEach(el => {
-    const cb = el.querySelector('input[type="checkbox"]');
-    el.classList.toggle('selected', cb.checked);
+function updateDropdownAndResults() {
+  const filtered = getFilteredPlans();
+  const dropdown = document.getElementById('plan-dropdown');
+  
+  dropdown.innerHTML = '<option value="">-- 請從下方選擇計畫 (' + filtered.length + '筆符合) --</option>';
+  
+  filtered.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `[${p.pi}] ${p.name}`;
+    dropdown.appendChild(opt);
   });
+}
 
+function handleDropdownSelect() {
+  const val = document.getElementById('plan-dropdown').value;
+  selectedPlanIds.clear();
+  if (val) {
+    selectedPlanIds.add(val);
+  }
   renderResults();
 }
 
-function selectAllPlans() {
-  const plans = PLANS_DATA[currentYear] || [];
+function selectAllFiltered() {
+  const filtered = getFilteredPlans();
   selectedPlanIds.clear();
-  plans.forEach(p => selectedPlanIds.add(p.id));
-  document.querySelectorAll('.plan-checkbox-item input[type="checkbox"]').forEach(cb => {
-    cb.checked = true;
-    cb.closest('.plan-checkbox-item').classList.add('selected');
-  });
+  filtered.forEach(p => selectedPlanIds.add(p.id));
   renderResults();
 }
 
 function clearSelection() {
   selectedPlanIds.clear();
-  document.querySelectorAll('.plan-checkbox-item input[type="checkbox"]').forEach(cb => {
-    cb.checked = false;
-    cb.closest('.plan-checkbox-item').classList.remove('selected');
-  });
+  document.getElementById('plan-dropdown').value = '';
   clearResults();
 }
 

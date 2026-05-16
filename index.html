@@ -55,18 +55,24 @@
           </button>
         </div>
       </div>
-      <div class="control-group" id="plan-select-group">
-        <label class="control-label">選擇計畫</label>
-        <div class="plan-select-grid" id="plan-select-grid">
-          <!-- Dynamically generated -->
+      <div class="control-row" style="display:flex; gap:20px; flex-wrap:wrap; margin-top:20px;">
+        <div class="control-group" style="flex:1; min-width:250px;">
+          <label class="control-label" for="search-input">內容搜尋</label>
+          <input type="text" id="search-input" class="form-input" placeholder="🔍 搜尋計畫名稱、主持人或內容..." oninput="handleSearch()">
+        </div>
+        <div class="control-group" style="flex:2; min-width:300px;">
+          <label class="control-label" for="plan-dropdown">下拉選擇計畫</label>
+          <select id="plan-dropdown" class="form-input" onchange="handleDropdownSelect()">
+            <option value="">-- 請選擇一項計畫 --</option>
+          </select>
         </div>
       </div>
-      <div class="action-buttons">
-        <button class="btn btn-primary" onclick="selectAllPlans()" id="btn-all">
-          <span>📋</span> 顯示全部計畫
+      <div class="action-buttons" style="margin-top:20px;">
+        <button class="btn btn-primary" onclick="selectAllFiltered()" id="btn-all">
+          <span>📋</span> 顯示列表所有計畫
         </button>
         <button class="btn btn-secondary" onclick="clearSelection()">
-          <span>✕</span> 清除選取
+          <span>✕</span> 清除畫面
         </button>
       </div>
     </div>
